@@ -67,7 +67,7 @@ template normalizeChar(c: char) =
   elif c in UpperAlpha: toLowerUnchecked(c)
   else: raise newException(ValueError, "Character '" & c & "' is not a letter!")
 
-func isAnagram*(wordA, wordB: openArray[char]): bool {.raises: ValueError.} =
+func isAnagram*(wordA, wordB: string): bool {.raises: ValueError.} =
   ## Checks if two words are anagrams of one another.
   ##
   ## Raises a `ValueError` on any non-letter character.
@@ -75,7 +75,8 @@ func isAnagram*(wordA, wordB: openArray[char]): bool {.raises: ValueError.} =
   var seenDifferent = false
   var mapA, mapB: Map
   for chIdx in 0..<wordA.len:
-    let (chA, chB) = (normalizeChar(wordA[chIdx]), normalizeChar(wordB[chIdx]))
+    let chA = normalizeChar(wordA[chIdx])
+    let chB = normalizeChar(wordB[chIdx])
     # Identical characters xor to 0, must meet at least one 1 (difference)
     seenDifferent = bool(ord(seenDifferent) or (ord(chA) xor ord(chB)))
     mapA[chA].inc()
@@ -83,7 +84,7 @@ func isAnagram*(wordA, wordB: openArray[char]): bool {.raises: ValueError.} =
   # words are not identical and letter counters match
   seenDifferent and (mapA == mapB)
 
-func isAnagram(candidate, wordNormalized: openArray[char]; wordMap: Map): bool
+func isAnagram(candidate, wordNormalized: string; wordMap: Map): bool
   {.raises: ValueError.} =
   ## Checks if two words are anagrams of one another.
   ## Leverages the validated and lowercased `wordNormalized` and its
